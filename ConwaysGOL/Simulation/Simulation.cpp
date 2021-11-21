@@ -1,12 +1,23 @@
 ﻿// Simulation.cpp : Defines the entry point for the application.
-//
 
 #include "Simulation.h"
 
-using namespace std;
-
-int main()
+void Simulation::Start()
 {
-	cout << "Hello CMake." << endl;
-	return 0;
+
+}
+
+void Simulation::End()
+{
+
+}
+
+void Simulation::Update(double DeltaTime)
+{
+
+}
+
+void Simulation::Render(SDL_Renderer& renderer)
+{
+
 }
