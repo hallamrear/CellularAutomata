@@ -1,6 +1,6 @@
 ﻿// Simulation.cpp : Defines the entry point for the application.
 #include "HalTec\OrientedBoundingBox.h"
-#include "Simulation.h"
+#include "GameOfLife.h"
 #include "Cell.h"
 #include "HalTec\Settings.h"
 #include "HalTec\InputManager.h"
@@ -10,7 +10,7 @@
 #include <iostream>
 #include <cmath>
 
-void Simulation::Start()
+void GameOfLife::Start()
 {
 	mIsPaused = true;
 
@@ -23,8 +23,8 @@ void Simulation::Start()
 	InputManager::Bind(IM_KEY_CODE::IM_KEY_D, IM_KEY_STATE::IM_KEY_HELD, [this]() { Vector2f pos = Camera::Get()->GetCameraPosition(); pos.X += 10.0f; Camera::Get()->SetCameraPosition(pos); });
 	InputManager::Bind(IM_KEY_CODE::IM_KEY_SPACE, IM_KEY_STATE::IM_KEY_PRESSED, [this]() { mIsPaused = !mIsPaused; });
 	InputManager::Bind(IM_KEY_CODE::IM_KEY_1, IM_KEY_STATE::IM_KEY_RELEASED, [this]() { mIsPaused = false; Update(0.0f); mIsPaused = true; });
-	InputManager::Bind(IM_MOUSE_CODE::IM_MOUSE_LEFT_CLICK, IM_KEY_STATE::IM_KEY_RELEASED, std::bind(&Simulation::EditCell, this, true));
-	InputManager::Bind(IM_MOUSE_CODE::IM_MOUSE_RIGHT_CLICK, IM_KEY_STATE::IM_KEY_RELEASED, std::bind(&Simulation::EditCell, this, false));
+	InputManager::Bind(IM_MOUSE_CODE::IM_MOUSE_LEFT_CLICK, IM_KEY_STATE::IM_KEY_RELEASED, std::bind(&GameOfLife::EditCell, this, true));
+	InputManager::Bind(IM_MOUSE_CODE::IM_MOUSE_RIGHT_CLICK, IM_KEY_STATE::IM_KEY_RELEASED, std::bind(&GameOfLife::EditCell, this, false));
 
 	srand(NULL);
 
@@ -56,7 +56,7 @@ void Simulation::Start()
 	}
 }
 
-void Simulation::End()
+void GameOfLife::End()
 {
 	if (mMousePointer)
 	{
@@ -65,7 +65,7 @@ void Simulation::End()
 	}
 }
 
-void Simulation::EditCell(bool isAlive)
+void GameOfLife::EditCell(bool isAlive)
 {
 	int gridX = (int)mMousePointerPosition.X / CELL_SIZE;
 	int gridY = (int)mMousePointerPosition.Y / CELL_SIZE;
@@ -76,7 +76,7 @@ void Simulation::EditCell(bool isAlive)
 		mCells[gridX][gridY].IsAlive = isAlive;
 }
 
-void Simulation::Update(double DeltaTime)
+void GameOfLife::Update(double DeltaTime)
 {
 	mMousePointerPosition = InputManager::Get()->GetMouseWorldPosition(); 
 	mMousePointerPosition.X = round(mMousePointerPosition.X / CELL_SIZE) * CELL_SIZE;
@@ -125,7 +125,7 @@ void Simulation::Update(double DeltaTime)
 
 }
 
-void Simulation::Render(SDL_Renderer& renderer)
+void GameOfLife::Render(SDL_Renderer& renderer)
 {
 	for (size_t j = 0; j < CELL_COUNT; j++)
 	{

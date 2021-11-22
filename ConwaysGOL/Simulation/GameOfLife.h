@@ -9,25 +9,25 @@
 class Cell;
 class BoundingBox;
 
-class Simulation : public GameState
+class GameOfLife : public GameState
 {
 private:
 	//Use this vector to avoid changing cell states ahead of their neighbour checks.
 	std::vector<std::pair<Vector2f, bool>> cellUpdates;
 
 	Vector2f mMousePointerPosition;
-	BoundingBox* mMousePointer;
+	BoundingBox* mMousePointer = nullptr;
 	Vector2f mGridOutlinePosition;
-	BoundingBox* mGridOutline;
+	BoundingBox* mGridOutline = nullptr;
 
-	bool mIsPaused;
-	Cell** mCells;
+	bool mIsPaused = true;
+	Cell** mCells = nullptr;
 
 	void EditCell(bool isAlive);
 
 public:
-	Simulation()  = default;
-	~Simulation() = default;
+	GameOfLife()  = default;
+	~GameOfLife() = default;
 
 	void Start() override;
 	void End() override;
