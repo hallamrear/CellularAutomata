@@ -6,6 +6,7 @@
 #include "HalTec\InputManager.h"
 #include "HalTec\Camera.h"
 #include "HalTec\BoundingBox.h"
+#include "HalTec/TextElement.h"
 
 #include <iostream>
 #include <cmath>
@@ -13,6 +14,7 @@
 void GameOfLife::Start()
 {
 	mIsPaused = true;
+	mPausedText = new TextElement(Transform());
 
 	mMousePointer = new BoundingBox(mMousePointerPosition, CELL_SIZE, CELL_SIZE);
 	mGridOutline = new BoundingBox(mGridOutlinePosition, CELL_SIZE * CELL_COUNT, CELL_SIZE * CELL_COUNT);
@@ -58,11 +60,33 @@ void GameOfLife::Start()
 
 void GameOfLife::End()
 {
+	if (mPausedText)
+	{
+		delete mPausedText;
+		mPausedText = nullptr;
+	}
+
 	if (mMousePointer)
 	{
 		delete mMousePointer;
 		mMousePointer = nullptr;
 	}
+
+	if (mGridOutline)
+	{
+		delete mGridOutline;
+		mGridOutline = nullptr;
+	}
+
+	for (size_t j = 0; j < CELL_COUNT; j++)
+	{
+		delete[] mCells[j];
+		mCells[j] = nullptr;
+	}
+
+	delete[] mCells;
+	mCells = nullptr;
+
 }
 
 void GameOfLife::EditCell(bool isAlive)
@@ -86,8 +110,18 @@ void GameOfLife::Update(double DeltaTime)
 	mGridOutlinePosition = Vector2f((CELL_COUNT * CELL_SIZE) / 2.0f - (CELL_SIZE / 2.0f), (CELL_COUNT * CELL_SIZE) / 2.0f - (CELL_SIZE / 2.0f));
 	mGridOutline->Update(DeltaTime);
 
-	if (mIsPaused == false)
+	mPausedText->Update(DeltaTime);
+
+	if (mIsPaused)
 	{
+		mPausedText->SetString("Paused!");
+		mPausedText->SetPosition(Camera::ScreenToWorld(Settings::Get()->GetWindowCentre()));
+	}
+	else
+	{
+		mPausedText->SetString("!");
+		mPausedText->SetPosition(Vector2f(-5000.0f, -5000.0f));
+
 		for (size_t j = 0; j < CELL_COUNT; j++)
 		{
 			for (size_t i = 0; i < CELL_COUNT; i++)
@@ -122,11 +156,13 @@ void GameOfLife::Update(double DeltaTime)
 		}
 		cellUpdates.clear();
 	}
-
 }
 
 void GameOfLife::Render(SDL_Renderer& renderer)
 {
+	if (mIsPaused)
+		mPausedText->Render();
+
 	for (size_t j = 0; j < CELL_COUNT; j++)
 	{
 		for (size_t i = 0; i < CELL_COUNT; i++)
@@ -137,4 +173,5 @@ void GameOfLife::Render(SDL_Renderer& renderer)
 
 	mGridOutline->Render(renderer);
 	mMousePointer->Render(renderer);
+
 }

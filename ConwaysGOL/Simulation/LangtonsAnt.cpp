@@ -4,12 +4,14 @@
 #include "HalTec\InputManager.h"
 #include "HalTec\Camera.h"
 #include "HalTec\OrientedBoundingBox.h"
+#include "HalTec/TextElement.h"
 
 #include <iostream>
 
 void LangtonsAnt::Start()
 {
 	srand(NULL);
+	Settings::Get()->SetDrawColliders(true);
 
 	InputManager::Bind(IM_KEY_CODE::IM_KEY_W, IM_KEY_STATE::IM_KEY_HELD, [this]() { Vector2f pos = Camera::Get()->GetCameraPosition(); pos.Y += 10.0f; Camera::Get()->SetCameraPosition(pos); });
 	InputManager::Bind(IM_KEY_CODE::IM_KEY_S, IM_KEY_STATE::IM_KEY_HELD, [this]() { Vector2f pos = Camera::Get()->GetCameraPosition(); pos.Y -= 10.0f; Camera::Get()->SetCameraPosition(pos); });
@@ -25,8 +27,7 @@ void LangtonsAnt::Start()
 			mAnt.Y = round((int)InputManager::Get()->GetMouseWorldPosition().Y / CELL_SIZE);			
 		} );
 
-	Settings::Get()->SetDrawColliders(true);
-
+	mPausedText = new TextElement(Transform());
 	mGridOutline = new BoundingBox(mGridOutlinePosition, CELL_SIZE * CELL_COUNT, CELL_SIZE * CELL_COUNT);
 	mGridOutlinePosition = Vector2f((CELL_COUNT * CELL_SIZE) / 2.0f - (CELL_SIZE / 2.0f), (CELL_COUNT * CELL_SIZE) / 2.0f - (CELL_SIZE / 2.0f));
 	mGridOutline->Update(0.0);
@@ -52,6 +53,12 @@ void LangtonsAnt::Start()
 
 void LangtonsAnt::End()
 {
+	if (mPausedText)
+	{
+		delete mPausedText;
+		mPausedText = nullptr;
+	}
+
 	if (mGridOutline)
 	{
 		delete mGridOutline;
@@ -63,6 +70,20 @@ void LangtonsAnt::End()
 		delete mAntOutline;
 		mAntOutline = nullptr;
 	}
+
+	for (int i = 0; i < CELL_COUNT; i++)
+	{
+		for (int j = 0; j < CELL_COUNT; j++)
+		{
+			delete[] mCellOutlines[i][j];
+			mCellOutlines[i][j] = nullptr;
+		}
+
+		delete[] mCellOutlines[i];
+		mCellOutlines[i] = nullptr;
+	}
+	delete[] mCellOutlines;
+	mCellOutlines = nullptr;
 }
 
 void LangtonsAnt::FlipCell()
@@ -78,8 +99,18 @@ void LangtonsAnt::FlipCell()
 
 void LangtonsAnt::Update(double DeltaTime)
 {
-	if (!mIsPaused)
+	mPausedText->Update(DeltaTime);
+
+	if (mIsPaused)
 	{
+		mPausedText->SetString("Paused!");
+		mPausedText->SetPosition(Camera::ScreenToWorld(Settings::Get()->GetWindowCentre()));
+	}
+	else
+	{
+		mPausedText->SetString("!");
+		mPausedText->SetPosition(Vector2f(-5000.0f, -5000.0f));
+
 		mAntOutlinePosition = Vector2f(mAnt.X * CELL_SIZE, mAnt.Y * CELL_SIZE);
 		mAntOutline->Update(DeltaTime);
 
@@ -127,6 +158,9 @@ void LangtonsAnt::Update(double DeltaTime)
 
 void LangtonsAnt::Render(SDL_Renderer& renderer)
 {
+	if (mIsPaused)
+		mPausedText->Render();
+
 	for (size_t j = 0; j < CELL_COUNT; j++)
 	{
 		for (size_t i = 0; i < CELL_COUNT; i++)
@@ -143,4 +177,5 @@ void LangtonsAnt::Render(SDL_Renderer& renderer)
 
 	if (mAntOutline)
 		mAntOutline->Render(renderer);
+
 }

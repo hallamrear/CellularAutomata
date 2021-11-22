@@ -8,6 +8,7 @@
 
 class Cell;
 class BoundingBox;
+class TextElement;
 
 class GameOfLife : public GameState
 {
@@ -20,6 +21,7 @@ private:
 	Vector2f mGridOutlinePosition;
 	BoundingBox* mGridOutline = nullptr;
 
+	TextElement* mPausedText;
 	bool mIsPaused = true;
 	Cell** mCells = nullptr;
 

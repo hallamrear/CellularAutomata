@@ -3,18 +3,24 @@
 #include "HalTec\Game.h"
 #include "HalTec\StateDirector.h"
 #include "HalTec\InputManager.h"
+#include "HalTec/TextElement.h"
 
 class Menu : public GameState
 {
+	Transform transform;
+	TextElement* mText;
+
 	inline void Start()
 	{
+		mText = new TextElement(transform, "");
+
 		InputManager::Bind(IM_KEY_CODE::IM_KEY_F1, IM_KEY_STATE::IM_KEY_PRESSED, [this]() { StateDirector::SetState(GameStateIdentifier::GAME_STATE_1); });
 		InputManager::Bind(IM_KEY_CODE::IM_KEY_F2, IM_KEY_STATE::IM_KEY_PRESSED, [this]() { StateDirector::SetState(GameStateIdentifier::GAME_STATE_2); });
 	};
 
-	inline void End() {};
-	inline void Update(double DeltaTime) {};
-	inline void Render(SDL_Renderer& renderer) {};
+	inline void End() { delete mText; mText = nullptr; };
+	inline void Update(double DeltaTime) { mText->SetString("Press F1 for Conway's Game of Life. Press F2 for Langton's ant."); mText->Update(DeltaTime); };
+	inline void Render(SDL_Renderer& renderer) { mText->Render(); };
 };
 
 int main(int argc, char* argv[])
@@ -22,8 +28,7 @@ int main(int argc, char* argv[])
 	StateDirector::SetupState(GameStateIdentifier::GAME_STATE_MAIN_MENU, new Menu());
 	StateDirector::SetupState(GameStateIdentifier::GAME_STATE_1, new GameOfLife());
 	StateDirector::SetupState(GameStateIdentifier::GAME_STATE_2, new LangtonsAnt());
-	//StateDirector::SetState(GameStateIdentifier::GAME_STATE_MAIN_MENU);
-	StateDirector::SetState(GameStateIdentifier::GAME_STATE_2);
+	StateDirector::SetState(GameStateIdentifier::GAME_STATE_MAIN_MENU);
 
 	WindowDetails details;
 	Game game;

@@ -78,6 +78,7 @@ struct Ant
 
 class BoundingBox;
 class OrientedBoundingBox;
+class TextElement;
 
 class LangtonsAnt : public GameState
 {
@@ -92,12 +93,11 @@ public:
 
 private:
 	Ant mAnt;
+	TextElement* mPausedText;
 	bool mIsPaused = true;
 	bool mCells[CELL_COUNT][CELL_COUNT];
 
-
 	void FlipCell();
-
 
 	//Rendering stuff
 	OrientedBoundingBox*** mCellOutlines;
