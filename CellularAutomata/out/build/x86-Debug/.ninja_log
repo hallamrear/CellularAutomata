@@ -1,0 +1,6 @@
+# ninja log v5
+4	534	6592541045476247	Simulation/CMakeFiles/Simulation.dir/Cell.cpp.obj	78c9449f73aa4fd9
+10	570	6592541045806254	Simulation/CMakeFiles/Simulation.dir/entry.cpp.obj	e4dd35ce53918f56
+0	776	6592541047856242	Simulation/CMakeFiles/Simulation.dir/LangtonsAnt.cpp.obj	8f4588452e75294c
+7	787	6592541048036242	Simulation/CMakeFiles/Simulation.dir/GameOfLife.cpp.obj	467754d05b4e4096
+788	1408	6592541054026223	Simulation/Simulation.exe	8dedf3375e8b4c81
