@@ -32,3 +32,4 @@
 *.app
 /ConwaysGOL/.vs
 /ConwaysGOL/out/build/x64-Debug
+/ConwaysGOL/out/build/x86-Debug

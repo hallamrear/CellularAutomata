@@ -1,8 +1,21 @@
+#include "Simulation.h"
+#include "HalTec\Game.h"
+#include "HalTec\StateDirector.h"
 
-using namespace std;
-
-int main()
+int main(int argc, char* argv[])
 {
-	cout << "Hello CMake." << endl;
+	StateDirector::SetupState(GameStateIdentifier::GAME_STATE_PLAYING, new Simulation());
+	StateDirector::SetState(GameStateIdentifier::GAME_STATE_PLAYING);
+
+	WindowDetails details;
+	Game game;
+
+	game.Initialise(argc, argv, details);
+
+	if(game.GetIsInitialised())
+	{
+		game.Start();
+	}
+
 	return 0;
 }

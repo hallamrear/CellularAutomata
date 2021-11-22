@@ -7,7 +7,7 @@ include_directories(${CMAKE_SOURCE_DIR}/HalTec/includes /inc)
 link_directories(${CMAKE_SOURCE_DIR}/HalTec/lib /lib)
 
 # Add source to this project's executable.
-add_executable (Simulation "Simulation.cpp" "Simulation.h"  "entry.cpp")
+add_executable (Simulation "Simulation.cpp" "Simulation.h"  "entry.cpp" "Cell.h" "Cell.cpp")
 
 target_link_libraries(Simulation HalTec)
 

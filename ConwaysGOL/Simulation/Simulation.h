@@ -3,9 +3,29 @@
 
 #pragma once
 #include "HalTec\GameStates.h"
+#include "HalTec\Vector2.h"
+#include <vector>
+
+class Cell;
+class BoundingBox;
 
 class Simulation : public GameState
 {
+private:
+	//Use this vector to avoid changing cell states ahead of their neighbour checks.
+	std::vector<std::pair<Vector2f, bool>> cellUpdates;
+
+	Vector2f mMousePointerPosition;
+	BoundingBox* mMousePointer;
+	Vector2f mGridOutlinePosition;
+	BoundingBox* mGridOutline;
+
+	bool mIsPaused;
+	Cell** mCells;
+
+	void EditCell(bool isAlive);
+
+public:
 	Simulation()  = default;
 	~Simulation() = default;
 
@@ -15,5 +35,3 @@ class Simulation : public GameState
 	void Update(double DeltaTime) override;
 	void Render(SDL_Renderer& renderer) override;
 };
-
-// TODO: Reference additional headers your program requires here.
