@@ -1,12 +1,13 @@
 #include "LangtonsAnt.h"
-#include "HalTec\BoundingBox.h"
-#include "HalTec\Settings.h"
-#include "HalTec\InputManager.h"
-#include "HalTec\Camera.h"
-#include "HalTec\OrientedBoundingBox.h"
-#include "HalTec/TextElement.h"
-
 #include <iostream>
+#include <HalTec\BoundingBox.h>
+#include <HalTec\Settings.h>
+#include <HalTec\InputManager.h>
+#include <HalTec\Camera.h>
+#include <HalTec\OrientedBoundingBox.h>
+#include <HalTec/TextElement.h>
+#include <HalTec\TextureCache.h>
+#include <HalTec\Texture.h>
 
 void LangtonsAnt::Start()
 {
@@ -32,23 +33,8 @@ void LangtonsAnt::Start()
 	mGridOutlinePosition = Vector2f((CELL_COUNT * CELL_SIZE) / 2.0f - (CELL_SIZE / 2.0f), (CELL_COUNT * CELL_SIZE) / 2.0f - (CELL_SIZE / 2.0f));
 	mGridOutline->Update(0.0);
 
-	mAntOutline = new BoundingBox(mAntOutlinePosition, CELL_SIZE, CELL_SIZE);
-
-	mCellOutlines = new OrientedBoundingBox** [CELL_COUNT];
-	for (int C = 0; C < CELL_COUNT; C++)
-		mCellOutlines[C] = new OrientedBoundingBox*[CELL_COUNT];
-
-	for (int j = 0; j < CELL_COUNT; j++)
-	{
-		for (int i = 0; i < CELL_COUNT; i++)
-		{
-			mCells[i][j] = false;
-			float rotation = 0.0f;
-			mCellOutlinePositions[i][j].X = i * CELL_SIZE;
-			mCellOutlinePositions[i][j].Y = j * CELL_SIZE;
-			mCellOutlines[i][j] = new OrientedBoundingBox(mCellOutlinePositions[i][j], rotation, CELL_SIZE, CELL_SIZE);
-		}
-	}
+	mAntTexture = TextureCache::GetTexture("Textures/GreenCell.bmp");
+	mCellTexture = TextureCache::GetTexture("Textures/RedCell.bmp");
 }
 
 void LangtonsAnt::End()
@@ -64,26 +50,6 @@ void LangtonsAnt::End()
 		delete mGridOutline;
 		mGridOutline = nullptr;
 	}
-
-	if (mAntOutline)
-	{
-		delete mAntOutline;
-		mAntOutline = nullptr;
-	}
-
-	for (int i = 0; i < CELL_COUNT; i++)
-	{
-		for (int j = 0; j < CELL_COUNT; j++)
-		{
-			delete[] mCellOutlines[i][j];
-			mCellOutlines[i][j] = nullptr;
-		}
-
-		delete[] mCellOutlines[i];
-		mCellOutlines[i] = nullptr;
-	}
-	delete[] mCellOutlines;
-	mCellOutlines = nullptr;
 }
 
 void LangtonsAnt::FlipCell()
@@ -110,9 +76,6 @@ void LangtonsAnt::Update(double DeltaTime)
 	{
 		mPausedText->SetString("!");
 		mPausedText->SetPosition(Vector2f(-5000.0f, -5000.0f));
-
-		mAntOutlinePosition = Vector2f(mAnt.X * CELL_SIZE, mAnt.Y * CELL_SIZE);
-		mAntOutline->Update(DeltaTime);
 
 		if (mCells[mAnt.X][mAnt.Y] == true)
 			//turn clockwise 90
@@ -165,17 +128,13 @@ void LangtonsAnt::Render(SDL_Renderer& renderer)
 	{
 		for (size_t i = 0; i < CELL_COUNT; i++)
 		{
-			if (mCells[i][j])
-			{
-				mCellOutlines[i][j]->Render(renderer);
-			}
+			mCellTexture->Render(renderer, Vector2f((float)i * CELL_SIZE, (float)j * CELL_SIZE), 0.0f);
 		}
 	}
 
 	if (mGridOutline)
 		mGridOutline->Render(renderer);
 
-	if (mAntOutline)
-		mAntOutline->Render(renderer);
-
+	if (mAntTexture)
+		mAntTexture->Render(renderer, Vector2f(mAnt.X * CELL_SIZE, mAnt.Y * CELL_SIZE), 0.0f);
 }

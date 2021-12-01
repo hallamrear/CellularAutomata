@@ -1,6 +1,8 @@
 #include "Cell.h"
 #include "HalTec\OrientedBoundingBox.h"
 #include <random>
+#include <HalTec\TextureCache.h>
+#include <HalTec\Texture.h>
 
 const Vector2f cellOffsets[8] =
 {
@@ -15,23 +17,15 @@ const Vector2f cellOffsets[8] =
 };
 
 Cell::Cell()
-	: Entity("", Transform())
+	: Entity("Textures/GreenCell.bmp", Transform())
 {
 	IsAlive = false;
-	mDeadBox = new OrientedBoundingBox(mTransform.Position, mTransform.Rotation, CELL_SIZE, CELL_SIZE);
-	mAliveBox = new BoundingBox(mTransform.Position, CELL_SIZE, CELL_SIZE);
 }
 
 Cell::~Cell()
 {
 	mNeighbours.clear();
 	mNeighbourCount = 0;
-
-	if (mDeadBox)
-	{
-		delete mDeadBox;
-		mDeadBox = nullptr;
-	}
 }
 
 void Cell::GetNeighbours(Cell** grid)
@@ -60,9 +54,6 @@ void Cell::GetNeighbours(Cell** grid)
 
 void Cell::Update(double DeltaTime)
 {
-	mDeadBox->Update(DeltaTime);
-	mAliveBox->Update(DeltaTime);
-
 	int aliveCount = 0;
 	for (size_t i = 0; i < mNeighbourCount; i++)
 	{
@@ -76,5 +67,5 @@ void Cell::Update(double DeltaTime)
 void Cell::Render(SDL_Renderer& renderer)
 {
 	if (IsAlive)
-		mAliveBox->Render(renderer);
+		mTexture->Render(renderer, mTransform.Position, mTransform.Rotation);
 }

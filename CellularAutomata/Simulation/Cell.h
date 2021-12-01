@@ -3,7 +3,7 @@
 #include <vector>
 
 #define CELL_COUNT 100
-#define CELL_SIZE 15.0f
+#define CELL_SIZE 10.0f
 
 class OrientedBoundingBox;
 class BoundingBox;
@@ -23,8 +23,6 @@ public:
 	int LivingNeighbourCount;
 	bool IsAlive;
 private:
-	OrientedBoundingBox* mDeadBox;
-	BoundingBox*		 mAliveBox;
 
 	int mNeighbourCount;
 	std::vector<Cell*> mNeighbours;

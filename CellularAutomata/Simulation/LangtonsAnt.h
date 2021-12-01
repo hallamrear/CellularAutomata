@@ -5,7 +5,7 @@
 #include <cmath>
 
 #define CELL_COUNT 100
-#define CELL_SIZE 5.0f
+#define CELL_SIZE 10.0f
 
 enum AntDirection : int
 {
@@ -79,6 +79,7 @@ struct Ant
 class BoundingBox;
 class OrientedBoundingBox;
 class TextElement;
+class Texture;
 
 class LangtonsAnt : public GameState
 {
@@ -100,10 +101,8 @@ private:
 	void FlipCell();
 
 	//Rendering stuff
-	OrientedBoundingBox*** mCellOutlines;
-	Vector2f mCellOutlinePositions[CELL_COUNT][CELL_COUNT];
 	Vector2f mGridOutlinePosition;
 	BoundingBox* mGridOutline;
-	BoundingBox* mAntOutline;
-	Vector2f mAntOutlinePosition;
+	Texture* mCellTexture;
+	Texture* mAntTexture;
 };
