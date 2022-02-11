@@ -128,7 +128,8 @@ void LangtonsAnt::Render(SDL_Renderer& renderer)
 	{
 		for (size_t i = 0; i < CELL_COUNT; i++)
 		{
-			mCellTexture->Render(renderer, Vector2f((float)i * CELL_SIZE, (float)j * CELL_SIZE), 0.0f);
+			if(mCells[i][j])
+				mCellTexture->Render(renderer, Vector2f((float)i * CELL_SIZE, (float)j * CELL_SIZE), 0.0f);
 		}
 	}
 
