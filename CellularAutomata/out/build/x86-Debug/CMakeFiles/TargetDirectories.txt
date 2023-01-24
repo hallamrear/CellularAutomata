@@ -1,5 +1,0 @@
-C:/Users/ryem_/source/repos/CellularAutomata/CellularAutomata/out/build/x86-Debug/CMakeFiles/edit_cache.dir
-C:/Users/ryem_/source/repos/CellularAutomata/CellularAutomata/out/build/x86-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/ryem_/source/repos/CellularAutomata/CellularAutomata/out/build/x86-Debug/Simulation/CMakeFiles/Simulation.dir
-C:/Users/ryem_/source/repos/CellularAutomata/CellularAutomata/out/build/x86-Debug/Simulation/CMakeFiles/edit_cache.dir
-C:/Users/ryem_/source/repos/CellularAutomata/CellularAutomata/out/build/x86-Debug/Simulation/CMakeFiles/rebuild_cache.dir
